@@ -2,6 +2,7 @@ package com.todoapp.model.Interface;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todoapp.entities.Tarefa;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,5 +18,5 @@ public interface RepositorioInterface {
 
     List<Tarefa> tarefasSalvasConcluido(ObjectMapper mapper) throws IOException;
 
-    void salvandoTarefas(List<Tarefa> pendenteSalva, List<Tarefa> concluidoSalva, List<Tarefa> pendente, List<Tarefa> concluido, ObjectMapper mapper);
+    void salvandoTarefas(List<Tarefa> pendente, List<Tarefa> concluido, ObjectMapper mapper);
 }

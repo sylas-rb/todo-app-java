@@ -3,20 +3,16 @@ package com.todoapp.entities;
 import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Errors.TarefaException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
-@Entity
 public class Tarefa{
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static final Comparator<Tarefa> POR_PRIORIDADE = Comparator.comparing(Tarefa::getPrioridade);
-    @Id
     private Long id;
     private String titulo;
     private String descricao;
@@ -36,7 +32,7 @@ public class Tarefa{
         this.vencimento = vencimento;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 

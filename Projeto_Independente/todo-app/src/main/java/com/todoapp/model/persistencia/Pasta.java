@@ -2,19 +2,17 @@ package com.todoapp.model.persistencia;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todoapp.entities.TarefasRepositorio;
 import com.todoapp.model.Errors.TarefaException;
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Interface.RepositorioInterface;
+import com.todoapp.model.Interface.SaidaInterface;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.util.List;
 
 public class Pasta implements RepositorioInterface{
-    private TarefasRepositorio tarefaRep;
-    private PrintStream out;
+    private SaidaInterface out;
 
     public final String userHome;
     public final String caminhoPastaPendente;
@@ -23,8 +21,7 @@ public class Pasta implements RepositorioInterface{
     public final File destinoArquivoPendente;
     public final File destinoArquivoConcluido;
 
-    public Pasta(TarefasRepositorio tarefaRep, PrintStream out, String userHome) {
-        this.tarefaRep = tarefaRep;
+    public Pasta(SaidaInterface out, String userHome) {
         this.out = out;
         this.userHome = userHome;
         this.caminhoPastaPendente = userHome + "/TarefaPendente/";
@@ -40,39 +37,39 @@ public class Pasta implements RepositorioInterface{
             File concluido = new File(caminhoPastaConcluido);
 
             if (pendente.mkdirs()) {
-                out.println("Pasta pendente foi criado com sucesso!");
+                out.exibirMensagemLn("Pasta pendente foi criado com sucesso!");
             } else if (pendente.exists()) {
-                out.println("Pasta pendente já existe.");
+                out.exibirMensagemLn("Pasta pendente já existe.");
             } else {
-                out.println("Erro ao criar Pasta pendente.");
+                out.exibirMensagemLn("Erro ao criar Pasta pendente.");
             }
             if (concluido.mkdirs()) {
-                out.println("Pasta concluído foi criado com sucesso");
+                out.exibirMensagemLn("Pasta concluído foi criado com sucesso");
             } else if (concluido.exists()) {
-                out.println("Pasta concluído já existe.");
+                out.exibirMensagemLn("Pasta concluído já existe.");
             } else {
-                out.println("Erro ao criar Pasta concluído.");
+                out.exibirMensagemLn("Erro ao criar Pasta concluído.");
             }
         } catch (Exception e) {
-            out.println("Erro ao criar pasta: " + e.getMessage());
+            out.exibirMensagemLn("Erro ao criar pasta: " + e.getMessage());
         }
     }
 
     public void salvarTarefaPendente(ObjectMapper mapper, List<Tarefa> tarefasResp) {
         try {
             mapper.writeValue(destinoArquivoPendente, tarefasResp);
-            out.println("Tarefa pendente salvo com sucesso!");
+            out.exibirMensagemLn("Tarefa pendente salvo com sucesso!");
         } catch(Exception e) {
-            out.println("Erro ao salvar arquivo com o JSON: " + e.getMessage());
+            out.exibirMensagemLn("Erro ao salvar arquivo com o JSON: " + e.getMessage());
         }
     }
 
     public void salvarTarefaConcluido(ObjectMapper mapper, List<Tarefa> tarefasResp) {
         try {
             mapper.writeValue(destinoArquivoConcluido, tarefasResp);
-            out.println("Tarefa concluído salvo com sucesso!");
+            out.exibirMensagemLn("Tarefa concluído salvo com sucesso!");
         } catch (Exception e) {
-            out.println("Erro ao salvar arquivo com o JSON: " + e.getMessage());
+            out.exibirMensagemLn("Erro ao salvar arquivo com o JSON: " + e.getMessage());
         }
     }
 
@@ -80,7 +77,7 @@ public class Pasta implements RepositorioInterface{
         if (destinoArquivoPendente.exists() && destinoArquivoPendente.length() > 0) {
             return mapper.readValue(destinoArquivoPendente, new TypeReference<>() {});
         } else {
-            out.println("tarefa pendente não encontrada.");
+            out.exibirMensagemLn("tarefa pendente não encontrada.");
             throw new TarefaException("Tarefa não encontrada.");
         }
     }
@@ -89,23 +86,21 @@ public class Pasta implements RepositorioInterface{
         if (destinoArquivoConcluido.exists() && destinoArquivoConcluido.length() > 0) {
             return mapper.readValue(destinoArquivoConcluido, new TypeReference<>() {});
         } else {
-            out.println("tarefa pendente não encontrada.");
+            out.exibirMensagemLn("tarefa pendente não encontrada.");
             throw new TarefaException("Tarefa não encontrada.");
         }
     }
 
-    public void salvandoTarefas(List<Tarefa> pendenteSalva, List<Tarefa> concluidoSalva, List<Tarefa> pendente, List<Tarefa> concluido, ObjectMapper mapper) {
+    public void salvandoTarefas(List<Tarefa> pendente, List<Tarefa> concluido, ObjectMapper mapper) {
         if (!pendente.isEmpty()) {
-            tarefaRep.adicionarTarefaPasta(pendente, pendenteSalva);
-            salvarTarefaPendente(mapper, pendenteSalva);
+            salvarTarefaPendente(mapper, pendente);
         } else {
-            out.println("Nenhuma tarefa pendente foi adicionada.");
+            out.exibirMensagemLn("Nenhuma tarefa pendente foi adicionada.");
         }
         if (!concluido.isEmpty()) {
-            tarefaRep.adicionarTarefaPasta(concluido, concluidoSalva);
-            salvarTarefaConcluido(mapper, concluidoSalva);
+            salvarTarefaConcluido(mapper, concluido);
         } else {
-            out.println("Nenhuma tarefa concluída foi adicionada.");
+            out.exibirMensagemLn("Nenhuma tarefa concluída foi adicionada.");
         }
     }
 }
