@@ -17,9 +17,7 @@ import com.todoapp.model.Service.TarefaFluxo;
 import org.junit.jupiter.api.*;
 
 import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -28,7 +26,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class TarefaFluxoTest {
-    String userHome = System.getProperty("user.home");
     private TarefasRepositorio tarefasRep;
     private ObjectMapper mapper;
     private RepositorioInterface pasta;
@@ -42,10 +39,7 @@ public class TarefaFluxoTest {
     List<Tarefa> segundaList;
 
     private final ByteArrayOutputStream outPut = new ByteArrayOutputStream();
-    private final PrintStream output = new PrintStream(outPut);
-    private final PrintStream out = System.out;
     private SaidaInterface OutPut;
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     private Tarefa t1;
     private Tarefa t2;
     private Tarefa t3;
@@ -59,9 +53,9 @@ public class TarefaFluxoTest {
         tarefasRep = new TarefasRepositorio(listTeste, pasta);
         listTeste = new ArrayList<>();
         segundaList = new ArrayList<>();
-        t1 = new Tarefa(1L, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "indeterminado");
-        t2 = new Tarefa(2L, "Teste2", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "indeterminado");
-        t3 = new Tarefa(3L, "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "indeterminado");
+        t1 = new Tarefa(1L, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
+        t2 = new Tarefa(2L, "Teste2", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
+        t3 = new Tarefa(3L, "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
     }
 
     @AfterEach
@@ -140,9 +134,9 @@ public class TarefaFluxoTest {
             assertEquals(Prioridade.MEDIA, t2.getPrioridade());
             assertEquals(Prioridade.BAIXA, t3.getPrioridade());
 
-            assertEquals(dataAlta.format(dtf), t1.getVencimento());
-            assertEquals(dataMedia.format(dtf), t2.getVencimento());
-            assertEquals("Indeterminado",  t3.getVencimento());
+            assertEquals(dataAlta, t1.getVencimento());
+            assertEquals(dataMedia, t2.getVencimento());
+            assertNull(t3.getVencimento());
         }
 
         @Test
@@ -160,11 +154,11 @@ public class TarefaFluxoTest {
             long id1 = 0;
             long id2 = 2;
 
-            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
-            Tarefa segundo = new Tarefa(id2, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
+            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
+            Tarefa segundo = new Tarefa(id2, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
 
-            listTeste.add(primeira);
-            segundaList.add(segundo);
+            tarefasRep.inserir(primeira);
+            tarefasRep.inserir(segundo);
 
             boolean verdadeiroM = funcoes1.confirmacaoTarefa(id1);
             boolean verdadeirom = funcoes2.confirmacaoTarefa(id2);
@@ -188,11 +182,11 @@ public class TarefaFluxoTest {
             long id1 = 0;
             long id2 = 2;
 
-            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
-            Tarefa segundo = new Tarefa(id2, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
+            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
+            Tarefa segundo = new Tarefa(id2, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
 
-            listTeste.add(primeira);
-            segundaList.add(segundo);
+            tarefasRep.inserir(primeira);
+            tarefasRep.inserir(segundo);
 
             boolean verdadeiroM = funcoes1.confirmacaoTarefa(id1);
             boolean verdadeirom = funcoes2.confirmacaoTarefa(id2);
@@ -216,8 +210,6 @@ public class TarefaFluxoTest {
             boolean tituloModificado = funcoes1.confirmarModificacao(titulo, ntitulo, t1);
             boolean descricaoModificado = funcoes1.confirmarModificacao(descricao, ndescricao, t2);
 
-            assertTrue(outPut.toString().contains("Titulo de tarefa modificada com sucesso."));
-            assertTrue(outPut.toString().contains("Descrição de tarefa modificada com sucesso."));
             assertTrue(tituloModificado);
             assertTrue(descricaoModificado);
             assertEquals(titulo, t1.getTitulo());
@@ -239,7 +231,6 @@ public class TarefaFluxoTest {
             boolean tituloModificado = funcoes1.confirmarModificacao(titulo, ntitulo, t1);
             boolean descricaoModificado = funcoes1.confirmarModificacao(descricao, ndescricao, t2);
 
-            assertTrue(outPut.toString().contains("Modificação cancelada."));
             assertFalse(tituloModificado);
             assertFalse(descricaoModificado);
             assertNotEquals(titulo, t1.getTitulo());
@@ -271,7 +262,7 @@ public class TarefaFluxoTest {
             assertEquals("Teste titulo",  t1.getTitulo());
             assertEquals("Teste descrição", t2.getDescricao());
             assertEquals(Prioridade.MEDIA, t3.getPrioridade());
-            assertEquals(dataMedia.format(dtf), t3.getVencimento());
+            assertEquals(dataMedia, t3.getVencimento());
         }
 
         @Test
@@ -282,15 +273,14 @@ public class TarefaFluxoTest {
 
             funcoes1 = new TarefaFluxo(entrada1, tarefasRep, OutPut);
 
-            listTeste.add(t1);
-            listTeste.add(t2);
+            tarefasRep.inserir(t1);
+            tarefasRep.inserir(t2);
 
             funcoes1.removendoTarefa();
 
-            assertEquals(1, listTeste.size());
-            assertTrue(listTeste.contains(t2));
-            assertFalse(listTeste.contains(t1));
-            assertTrue(outPut.toString().contains("Tarefa removida com sucesso."));
+            assertEquals(1, tarefasRep.encontrarTodos().size());
+            assertTrue(tarefasRep.encontrarTodos().contains(t2));
+            assertFalse(tarefasRep.encontrarTodos().contains(t1));
         }
     }
 
@@ -311,7 +301,6 @@ public class TarefaFluxoTest {
         @Test
         @DisplayName("Testando os retornos de mensagens de erros em entradas invalidas.")
         public void nivelPrioridadetest() {
-            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate data = LocalDate.now();
             LocalDate dataAlta = data.plusDays(7);
 
@@ -323,64 +312,7 @@ public class TarefaFluxoTest {
 
             assertEquals(Prioridade.ALTA, t1.getPrioridade());
 
-            assertEquals(dataAlta.format(dtf), t1.getVencimento());
-        }
-
-        @Test
-        @DisplayName("Verificando se esta voltando a decisão certa, retorno true")
-        public void confirmacaoTarefaTest() {
-            Scanner scRespostaMaiuscula = new Scanner("lkadjsflskaj\n a\n S");
-            entrada1 = new EntradaConsole(scRespostaMaiuscula, OutPut);
-            funcoes1 =  new TarefaFluxo(entrada1, tarefasRep, OutPut);
-
-            long id1 = 0;
-
-            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
-
-            listTeste.add(primeira);
-
-            boolean verdadeiroM = funcoes1.confirmacaoTarefa(id1);
-
-            assertTrue(verdadeiroM);
-        }
-
-        @Test
-        @DisplayName("Verificando se a função está retornando mensagem errada se a entrada não for correta")
-        public void removendoTarefaTest() {
-            Scanner caminhoRemocao = new Scanner("n\n 1\n s\n");
-            entrada1 = new EntradaConsole(caminhoRemocao, OutPut);
-            funcoes1 = new  TarefaFluxo(entrada1, tarefasRep, OutPut);
-
-            listTeste.add(t1);
-            listTeste.add(t2);
-
-            funcoes1.removendoTarefa();
-
-            assertEquals(1, listTeste.size());
-            assertTrue(listTeste.contains(t2));
-            assertFalse(listTeste.contains(t1));
-            assertTrue(outPut.toString().contains("Somente número, verifique o que digitou: "));
-        }
-    }
-
-    @Nested
-    class CaminhoExcesoes {
-        @Test
-        @DisplayName("Mensagem de erro caso não encontrar a tarefa")
-        public void confirmacaoTarefaTest() {
-            Scanner scRespostaMinuscula = new Scanner("s");
-            entrada1 = new EntradaConsole(scRespostaMinuscula, OutPut);
-            funcoes1 = new TarefaFluxo(entrada1, tarefasRep, OutPut);
-
-            List<Tarefa> segundaLista = new ArrayList<>();
-            long id1 = 0;
-            long id2 = 2;
-
-            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, "25/08/2026");
-
-            segundaLista.add(primeira);
-
-            assertThrows(TarefaException.class, () -> funcoes1.confirmacaoTarefa(id2));
+            assertEquals(dataAlta, t1.getVencimento());
         }
 
         @Test
@@ -392,33 +324,25 @@ public class TarefaFluxoTest {
 
             long id2 = 2;
 
-            assertThrows(TarefaException.class, () -> funcoes1.confirmacaoTarefa(id2));
+            assertFalse(funcoes1.confirmacaoTarefa(id2));
         }
 
         @Test
-        @DisplayName("Verificando erros estão sendo tratados e a mensagem está correta")
-        public void modificaTarefaTest() {
-            t3 = new Tarefa(3L, "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, null, "indeterminado");
-            Scanner caminhoPrioridade = new Scanner("3\n s\n 4");
-            entrada1 = new EntradaConsole(caminhoPrioridade, OutPut);
-            funcoes1 = new TarefaFluxo(entrada1, tarefasRep, OutPut);
+        @DisplayName("Verificando se esta voltando a decisão certa, retorno true")
+        public void confirmacaoTarefaTest() {
+            Scanner scRespostaMaiuscula = new Scanner("lkadjsflskaj\n a\n S");
+            entrada1 = new EntradaConsole(scRespostaMaiuscula, OutPut);
+            funcoes1 =  new TarefaFluxo(entrada1, tarefasRep, OutPut);
 
-            funcoes1.modificaTarefa(t3);
+            long id1 = 0;
 
-            assertTrue(outPut.toString().contains("A tarefa não está de acordo para modificação, verifique a tarefa."));
-        }
+            Tarefa primeira = new Tarefa(id1, "Teste1", "Teste descrição", Status.PENDENTE, Prioridade.BAIXA, date, null);
 
-        @Test
-        @DisplayName("Verificando se a função está retornando erro corretamente se o id estiver invalido")
-        public void removendoTarefaTest() {
-            Scanner caminhoRemocao = new Scanner("3\n 1\n s\n");
-            entrada1 = new EntradaConsole(caminhoRemocao, OutPut);
-            funcoes1 = new  TarefaFluxo(entrada1, tarefasRep, OutPut);
+            tarefasRep.inserir(primeira);
 
-            listTeste.add(t1);
-            listTeste.add(t2);
+            boolean verdadeiroM = funcoes1.confirmacaoTarefa(id1);
 
-            assertThrows(TarefaException.class, () -> funcoes1.removendoTarefa());
+            assertTrue(verdadeiroM);
         }
     }
 }

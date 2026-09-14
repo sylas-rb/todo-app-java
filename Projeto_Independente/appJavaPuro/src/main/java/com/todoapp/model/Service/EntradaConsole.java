@@ -26,7 +26,6 @@ public class EntradaConsole implements EntradaInterface {
     }
 
     public long lerLong() {
-        out.exibirMensagemLn("Qual id da tarefa: ");
         return Long.parseLong(sc.nextLine().trim());
     }
 

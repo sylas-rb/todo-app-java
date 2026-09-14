@@ -141,6 +141,10 @@ public class TarefaFluxo implements TarefaFluxoInterface {
     public boolean confirmacaoTarefa(long id) {
         Tarefa tarefaAlvo = tarefasRep.encontrarPorId(id);
 
+        if (tarefaAlvo == null) {
+            out.exibirMensagemLn("Tarefa não encontrada, verifique o id");
+            return false;
+        }
         out.exibirMensagemLn(tarefaAlvo.formatoExibicao());
         return entrada.confirmado();
     }
@@ -209,7 +213,7 @@ public class TarefaFluxo implements TarefaFluxoInterface {
                         }
                         break;
                     case 3:
-                        out.exibirMensagemLn(tarefa.toString());
+                        out.exibirMensagemLn(tarefa.formatoExibicao());
 
                         if (entrada.confirmado()) {
                             nivelPrioridade(tarefa);
@@ -242,18 +246,17 @@ public class TarefaFluxo implements TarefaFluxoInterface {
 
             id = entrada.lerLong();
 
-            if (id == -1) {
-                continue;
-            }
-
             if (confirmacaoTarefa(id)) {
                 try {
                     tarefasRep.deletePorId(id);
+                    break;
                 } catch (TarefaException ex) {
                     out.exibirMensagemLn(ex.getMessage());
                 } catch (NullPointerException ex) {
                     out.exibirMensagemLn("Erro ao procurar tarefa, verifique o Id digitado.");
-                } catch (Exception ex) {
+                } catch (NumberFormatException e) {
+                    out.exibirMensagemLn("Erro no id,verifique o Id digitado.");
+                }catch (Exception ex) {
                     out.exibirMensagemLn("Erro inesperado, verifique o ID digitado.");
                 }
             }

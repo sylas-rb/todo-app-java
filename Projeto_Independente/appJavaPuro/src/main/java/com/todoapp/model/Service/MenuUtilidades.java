@@ -111,6 +111,7 @@ public class MenuUtilidades {
                             }
                             break;
                         case 2:
+                            out.exibirMensagemLn("Qual id da tarefa? ");
                             id = entrada.lerLong();
                             tarefa = tarefasRep.encontrarPorId(id);
                             funcoes.modificaTarefa(tarefa);

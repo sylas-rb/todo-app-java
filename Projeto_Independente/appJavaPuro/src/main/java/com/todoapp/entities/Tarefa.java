@@ -23,7 +23,8 @@ public class Tarefa{
 
     public Tarefa() {}
 
-    public Tarefa(String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento) {
+    public Tarefa(Long id, String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento) {
+        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
