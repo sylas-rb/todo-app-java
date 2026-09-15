@@ -1,10 +1,11 @@
 package com.todoapp.controller;
 
-import com.todoapp.Repository.TarefasRepositorio;
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Enums.Prioridade;
+import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Interface.FluxoServiceInterface;
-import org.springframework.http.ResponseEntity;
+import com.todoapp.model.Interface.OrdemTarefaInterface;
+import com.todoapp.model.Interface.TarefaDAO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,42 +14,44 @@ import java.util.List;
 @RequestMapping("/api/tarefas")
 public class TarefaController {
 
-    private final TarefasRepositorio repositorio;
+    private final TarefaDAO repositorio;
     private final FluxoServiceInterface funcoes;
+    private final OrdemTarefaInterface ordemTarefa;
 
-    public TarefaController(TarefasRepositorio repositorio, FluxoServiceInterface funcoes) {
+    public TarefaController(TarefaDAO repositorio, FluxoServiceInterface funcoes, OrdemTarefaInterface ordemTarefa) {
         this.repositorio = repositorio;
         this.funcoes = funcoes;
+        this.ordemTarefa = ordemTarefa;
     }
 
-    @GetMapping("/tarefa/{id}")
-    public String tarefaReferente(@PathVariable long id) {
-        return funcoes.mostrarTarefa(id);
+    @GetMapping("/{id}")
+    public Tarefa tarefaReferente(@PathVariable long id) {
+        return repositorio.encontrarPorId(id);
     }
 
-    @GetMapping("/pendentes/data")
-    public List<Tarefa> ListarPendenteData() {
-        return repositorio.tarefaDataPendente();
+    @GetMapping("/pendente")
+    public List<Tarefa> pendente() {
+        return ordemTarefa.ordenarTarefaStatusPendente(repositorio.encontrarTodos());
     }
 
-    @GetMapping("/pendentes/vencimento")
+    @GetMapping("/concluido")
+    public List<Tarefa> concluido() {
+        return ordemTarefa.ordenarTarefaStatusConcluido(repositorio.encontrarTodos());
+    }
+
+    @GetMapping("/data")
+    public List<Tarefa> ListarData() {
+        return ordemTarefa.ordenarTarefaData(repositorio.encontrarTodos());
+    }
+
+    @GetMapping("/vencimento")
     public List<Tarefa> ListarPendenteVencimento() {
-        return repositorio.tarefaVencimentoPendente();
+        return ordemTarefa.ordenarTarefaVencimento(repositorio.encontrarTodos());
     }
 
-    @GetMapping("/pendentes/prioridade")
+    @GetMapping("/prioridade")
     public List<Tarefa> ListarPendentePrioridade() {
-        return repositorio.tarefaPrioridadePendente();
-    }
-
-    @GetMapping("/concluida/data")
-    public List<Tarefa> ListarConcluidaData() {
-        return repositorio.tarefaDataConcluidas();
-    }
-
-    @GetMapping("/concluida/prioridade")
-    public List<Tarefa> ListarConcluidaPrioridade() {
-        return repositorio.tarefaPrioridadeConcluidas();
+        return ordemTarefa.ordenarTarefaPrioridade(repositorio.encontrarTodos());
     }
 
     @PostMapping("/adicionar_tarefa")
@@ -62,8 +65,8 @@ public class TarefaController {
     }
 
     @PatchMapping("/marca/{id}")
-    public void marcaTarefa(@PathVariable Long id) {
-        funcoes.marcaTarefa(id);
+    public void marcaTarefa(@PathVariable Long id, @PathVariable Status status) {
+        funcoes.marcaTarefa(id, status);
     }
 
     @PatchMapping("/modificar_titulo/{id}")
@@ -78,6 +81,6 @@ public class TarefaController {
 
     @DeleteMapping("/delete/{id}")
     public void deletarTarefa(@PathVariable("id") long id) {
-        funcoes.removendoTarefa(id);
+        repositorio.deletePorId(id);
     }
 }
