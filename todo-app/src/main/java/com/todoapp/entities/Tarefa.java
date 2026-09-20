@@ -3,10 +3,7 @@ package com.todoapp.entities;
 import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Errors.TarefaException;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 @Entity
+@Table(name = "tb_tarefa")
 public class Tarefa{
     private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -31,7 +29,8 @@ public class Tarefa{
 
     public Tarefa() {}
 
-    public Tarefa(String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento) {
+    public Tarefa(Long id, String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento) {
+        this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
