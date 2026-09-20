@@ -1,22 +1,27 @@
 package com.todoapp.entities;
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
+@Table(name="tb_User")
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
 
-    private List<Tarefa> tarefa = new ArrayList<>();
-
     public User() {}
 
-    public User(String nome, String email) {
+    public User(Long id, String nome, String email) {
+        this.id = id;
         this.nome = nome;
         this.email = email;
     }
@@ -43,10 +48,6 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public List<Tarefa> getTarefa() {
-        return tarefa;
     }
 
     @Override

@@ -22,14 +22,22 @@ public class Tarefa{
     private Long id;
     private String titulo;
     private String descricao;
+
+    @Enumerated(EnumType.STRING)
     private Status status;
+    @Enumerated(EnumType.STRING)
     private Prioridade prioridade;
+
     private LocalDate date;
     private LocalDate vencimento;
 
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User usuario;
+
     public Tarefa() {}
 
-    public Tarefa(Long id, String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento) {
+    public Tarefa(Long id, String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento, User usuario) {
         this.id = id;
         this.titulo = titulo;
         this.descricao = descricao;
@@ -37,6 +45,7 @@ public class Tarefa{
         this.prioridade = prioridade;
         this.date = date;
         this.vencimento = vencimento;
+        this.usuario = usuario;
     }
 
     public Long getId() {
@@ -95,6 +104,10 @@ public class Tarefa{
         this.vencimento = vencimento;
     }
 
+    public User getUsuario() {
+        return usuario;
+    }
+
     public void tarefaStatus(Status status) {
         if (status == null) {
             throw new TarefaException("Status não pode ser nulo");
@@ -102,35 +115,8 @@ public class Tarefa{
         this.status = status;
     }
 
-    public void tarefaPrioridade (Prioridade prioridade) {
-        this.setPrioridade(prioridade);
-        if ( prioridade.diasVencimento() != 0) {
-            this.setVencimento(date.plusDays(prioridade.diasVencimento()));
-        } else {
-            this.setVencimento(null);
-        }
-    }
-
-    public void concluidaOuPendente() {
-        if (this.getStatus() == Status.PENDENTE) {
-            this.tarefaStatus(Status.CONCLUIDA);
-        } else if (this.getStatus() == Status.CONCLUIDA) {
-            this.tarefaStatus(Status.PENDENTE);
-        } else {
-            throw new TarefaException("Não foi possível mudar status da tarefa, o verifique a tarefa.");
-        }
-    }
-
-    public void incrementandoVencimento() {
-        LocalDate now = LocalDate.now();
-        long diasPassado = ChronoUnit.DAYS.between(this.getDate(), now);
-        if (diasPassado < 7 && this.getPrioridade().equals(Prioridade.ALTA)) {
-            this.setVencimento(this.getVencimento().plusDays(7));
-        } else if (diasPassado < 15 && this.getPrioridade().equals(Prioridade.ALTA) || this.getPrioridade().equals(Prioridade.MEDIA)) {
-            this.setVencimento(this.getVencimento().plusDays(15));
-        } else {
-            this.setVencimento(null);
-        }
+    public void setUsuario(User usuario) {
+        this.usuario = usuario;
     }
 
     public String formatoExibicao() {

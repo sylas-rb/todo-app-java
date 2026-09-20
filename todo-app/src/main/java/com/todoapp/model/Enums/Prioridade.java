@@ -10,7 +10,7 @@ public enum Prioridade {
         this.dias = dias;
     }
 
-    public int diasVencimento() {
+    public int getDiasVencimento() {
         return this.dias;
     }
 }
