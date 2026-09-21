@@ -1,5 +1,6 @@
 package com.todoapp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,6 +18,10 @@ public class User implements Serializable {
     private Long id;
     private String nome;
     private String email;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Tarefa> tarefas = new ArrayList<>();
 
     public User() {}
 
@@ -48,6 +53,10 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public List<Tarefa> getTarefas() {
+        return tarefas;
     }
 
     @Override

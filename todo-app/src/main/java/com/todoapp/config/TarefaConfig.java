@@ -37,5 +37,9 @@ public class TarefaConfig implements CommandLineRunner {
         Tarefa t3 = new Tarefa( null, "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.ALTA, date, date.plusDays(Prioridade.ALTA.getDiasVencimento()), us1);
 
         tarefaRepositorio.saveAll(Arrays.asList(t1,t2,t3));
+
+        us1.getTarefas().add(t1);
+        us2.getTarefas().add(t2);
+        us1.getTarefas().add(t3);
     }
 }
