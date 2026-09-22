@@ -3,10 +3,10 @@ package com.todoapp;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.todoapp.entities.Tarefa;
-import com.todoapp.Repository.TarefasRepositorio;
+import com.todoapp.service.TarefasRepositorio;
 import com.todoapp.model.Errors.TarefaException;
 import com.todoapp.model.Interface.*;
-import com.todoapp.model.Service.*;
+import com.todoapp.model.ordem.*;
 import com.todoapp.model.dao.DAOconexao;
 import com.todoapp.model.persistencia.Pasta;
 

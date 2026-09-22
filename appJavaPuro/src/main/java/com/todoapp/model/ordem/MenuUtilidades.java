@@ -1,9 +1,9 @@
-package com.todoapp.model.Service;
+package com.todoapp.model.ordem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Errors.TarefaException;
-import com.todoapp.Repository.TarefasRepositorio;
+import com.todoapp.service.TarefasRepositorio;
 
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Interface.*;

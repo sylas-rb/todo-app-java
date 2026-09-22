@@ -1,7 +1,7 @@
-package com.todoapp.model.Service;
+package com.todoapp.model.ordem;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.todoapp.Repository.TarefasRepositorio;
+import com.todoapp.service.TarefasRepositorio;
 import com.todoapp.model.Interface.EntradaInterface;
 import com.todoapp.model.Interface.SaidaInterface;
 import com.todoapp.model.Interface.TarefaFluxoInterface;

@@ -1,4 +1,4 @@
-package com.todoapp.Repository;
+package com.todoapp.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.todoapp.entities.Tarefa;

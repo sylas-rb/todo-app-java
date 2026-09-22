@@ -1,10 +1,9 @@
-package com.todoapp.model.Service;
+package com.todoapp.model.ordem;
 
 import com.todoapp.model.Interface.EntradaInterface;
 import com.todoapp.model.Interface.SaidaInterface;
 import org.springframework.stereotype.Service;
 
-import java.io.PrintStream;
 import java.util.Scanner;
 
 @Service

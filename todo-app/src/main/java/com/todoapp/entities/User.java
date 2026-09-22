@@ -59,6 +59,11 @@ public class User implements Serializable {
         return tarefas;
     }
 
+    public void atualizar(User user){
+        this.nome = user.getNome();
+        this.email = user.getEmail();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
