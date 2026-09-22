@@ -1,4 +1,4 @@
-package com.todoapp.model.Service;
+package com.todoapp.model.ordem;
 
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Enums.Status;
@@ -6,7 +6,6 @@ import com.todoapp.model.Interface.OrdemTarefaInterface;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;

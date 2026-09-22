@@ -1,9 +1,8 @@
-package com.todoapp.Repository;
+package com.todoapp.service;
 
 import com.todoapp.entities.User;
 import com.todoapp.model.Errors.TarefaException;
 import com.todoapp.model.Interface.UserRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,16 +10,24 @@ import java.util.Optional;
 
 @Service
 public class UserServico {
-    @Autowired
-    private UserRepositorio UserRepositorio;
+    private final UserRepositorio userRepositorio;
+
+    public UserServico(UserRepositorio userRepositorio) {
+        this.userRepositorio = userRepositorio;
+    }
+
+    public User salvar(User user){
+        userRepositorio.save(user);
+        return user;
+    }
 
     public List<User> encontrarTudo() {
-        return UserRepositorio.findAll();
+        return userRepositorio.findAll();
 
     }
 
     public User encontrarPorId (Long id) {
-        Optional<User> user = UserRepositorio.findById(id);
+        Optional<User> user = userRepositorio.findById(id);
         if (user.isPresent()) {
             return user.get();
         } else {
@@ -32,11 +39,11 @@ public class UserServico {
         User user = encontrarPorId(id);
         user.setNome(userAtualizado.getNome());
         user.setEmail(userAtualizado.getEmail());
-        return UserRepositorio.save(user);
+        return userRepositorio.save(user);
     }
 
     public void deletar(Long id) {
         User user = encontrarPorId(id);
-        UserRepositorio.delete(user);
+        userRepositorio.delete(user);
     }
 }

@@ -1,18 +1,22 @@
 package com.todoapp.resource;
 
-import com.todoapp.Repository.TarefasServico;
+import com.todoapp.service.TarefasServico;
 import com.todoapp.entities.Tarefa;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
 @RequestMapping("/tarefas")
 public class TarefaResource {
-    @Autowired
-    private TarefasServico servico;
+    private final TarefasServico servico;
+
+    public TarefaResource(TarefasServico servico) {
+        this.servico = servico;
+    }
 
     @GetMapping
     public ResponseEntity<List<Tarefa>> findAll() {
@@ -26,13 +30,20 @@ public class TarefaResource {
         return ResponseEntity.ok().body(tarefa);
     }
 
-    @PutMapping(value="/{id}")
+    @PostMapping
+    public ResponseEntity<Tarefa> salvar(@RequestBody Tarefa tarefa) {
+        tarefa = servico.salvar(tarefa);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tarefa.getId()).toUri();
+        return ResponseEntity.created(uri).body(tarefa);
+    }
+
+    @PutMapping(value="/atualizar/{id}")
     public ResponseEntity<Tarefa>  update(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizado) {
         Tarefa tarefa = servico.atualizar(id, tarefaAtualizado);
         return ResponseEntity.ok().body(tarefa);
     }
 
-    @DeleteMapping(value="/{id}")
+    @DeleteMapping(value="/delete/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         servico.remover(id);
         return ResponseEntity.noContent().build();

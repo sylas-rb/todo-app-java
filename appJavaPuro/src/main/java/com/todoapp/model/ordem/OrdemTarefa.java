@@ -1,4 +1,4 @@
-package com.todoapp.model.Service;
+package com.todoapp.model.ordem;
 
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Enums.Status;

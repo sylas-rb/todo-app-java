@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 
 @Entity
@@ -117,6 +116,16 @@ public class Tarefa{
 
     public void setUsuario(User usuario) {
         this.usuario = usuario;
+    }
+
+    public void atualizar (Tarefa tarefa) {
+        this.titulo = tarefa.getTitulo();
+        this.descricao = tarefa.getDescricao();
+        this.status = tarefa.getStatus();
+        this.prioridade = tarefa.getPrioridade();
+        this.date = tarefa.getDate();
+        this.vencimento = tarefa.getVencimento();
+        this.usuario = tarefa.getUsuario();
     }
 
     public String formatoExibicao() {

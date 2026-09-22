@@ -6,7 +6,6 @@ import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Interface.TarefaRepositorio;
 import com.todoapp.model.Interface.UserRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,11 +16,13 @@ import java.util.Arrays;
 @Configuration
 @Profile("tarefa-test")
 public class TarefaConfig implements CommandLineRunner {
-    @Autowired
-    private TarefaRepositorio tarefaRepositorio;
+    private final TarefaRepositorio tarefaRepositorio;
+    private final UserRepositorio userRepositorio;
 
-    @Autowired
-    private UserRepositorio userRepositorio;
+    public TarefaConfig(TarefaRepositorio tarefaRepositorio, UserRepositorio userRepositorio) {
+        this.tarefaRepositorio = tarefaRepositorio;
+        this.userRepositorio = userRepositorio;
+    }
 
     @Override
     public void run(String... args) throws Exception {

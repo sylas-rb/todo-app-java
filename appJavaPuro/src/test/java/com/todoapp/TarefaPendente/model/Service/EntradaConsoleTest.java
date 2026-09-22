@@ -5,8 +5,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Interface.EntradaInterface;
 import com.todoapp.model.Interface.SaidaInterface;
-import com.todoapp.model.Service.EntradaConsole;
-import com.todoapp.model.Service.SaidaConsole;
+import com.todoapp.model.ordem.EntradaConsole;
+import com.todoapp.model.ordem.SaidaConsole;
 import org.junit.jupiter.api.*;
 
 import java.io.PrintStream;

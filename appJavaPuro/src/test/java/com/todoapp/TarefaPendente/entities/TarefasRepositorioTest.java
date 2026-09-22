@@ -3,13 +3,13 @@ package com.todoapp.TarefaPendente.entities;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.todoapp.entities.Tarefa;
-import com.todoapp.Repository.TarefasRepositorio;
+import com.todoapp.service.TarefasRepositorio;
 import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
 import com.todoapp.model.Errors.TarefaException;
 import com.todoapp.model.Interface.RepositorioInterface;
 import com.todoapp.model.Interface.SaidaInterface;
-import com.todoapp.model.Service.SaidaConsole;
+import com.todoapp.model.ordem.SaidaConsole;
 import com.todoapp.model.persistencia.Pasta;
 import org.junit.jupiter.api.*;
 
