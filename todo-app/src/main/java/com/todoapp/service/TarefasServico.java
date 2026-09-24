@@ -1,7 +1,7 @@
 package com.todoapp.service;
 
 import com.todoapp.entities.Tarefa;
-import com.todoapp.model.Errors.TarefaException;
+import com.todoapp.model.Errors.DataBaseException;
 import com.todoapp.model.Interface.TarefaRepositorio;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class TarefasServico{
         if (tarefa.isPresent()) {
             return tarefa.get();
         } else {
-            throw new TarefaException("não foi possível encontrar tarefa.");
+            throw new DataBaseException("não foi possível encontrar tarefa.");
         }
     }
 

@@ -1,7 +1,7 @@
 package com.todoapp.service;
 
 import com.todoapp.entities.User;
-import com.todoapp.model.Errors.TarefaException;
+import com.todoapp.model.Errors.DataBaseException;
 import com.todoapp.model.Interface.UserRepositorio;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class UserServico {
         if (user.isPresent()) {
             return user.get();
         } else {
-            throw new TarefaException("usuário não encontrado.");
+            throw new DataBaseException("usuário não encontrado.");
         }
     }
 
