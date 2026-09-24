@@ -37,13 +37,13 @@ public class TarefaResource {
         return ResponseEntity.created(uri).body(tarefa);
     }
 
-    @PutMapping(value="/atualizar/{id}")
+    @PutMapping(value="/{id}")
     public ResponseEntity<Tarefa>  update(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizado) {
         Tarefa tarefa = servico.atualizar(id, tarefaAtualizado);
         return ResponseEntity.ok().body(tarefa);
     }
 
-    @DeleteMapping(value="/delete/{id}")
+    @DeleteMapping(value="/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         servico.remover(id);
         return ResponseEntity.noContent().build();
