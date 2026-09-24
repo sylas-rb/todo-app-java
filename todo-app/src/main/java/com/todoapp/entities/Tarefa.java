@@ -2,7 +2,7 @@ package com.todoapp.entities;
 
 import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
-import com.todoapp.model.Errors.TarefaException;
+import com.todoapp.model.Errors.DataBaseException;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -109,7 +109,7 @@ public class Tarefa{
 
     public void tarefaStatus(Status status) {
         if (status == null) {
-            throw new TarefaException("Status não pode ser nulo");
+            throw new DataBaseException("Status não pode ser nulo");
         }
         this.status = status;
     }
