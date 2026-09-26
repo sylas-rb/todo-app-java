@@ -2,11 +2,12 @@ package com.todoapp.service;
 
 import com.todoapp.entities.User;
 import com.todoapp.model.Errors.DataBaseException;
+import com.todoapp.model.Errors.RecursoNaoEncontradoExcecao;
 import com.todoapp.model.Interface.UserRepositorio;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServico {
@@ -27,12 +28,8 @@ public class UserServico {
     }
 
     public User encontrarPorId (Long id) {
-        Optional<User> user = userRepositorio.findById(id);
-        if (user.isPresent()) {
-            return user.get();
-        } else {
-            throw new DataBaseException("usuário não encontrado.");
-        }
+            return userRepositorio.findById(id)
+                    .orElseThrow(() -> new RecursoNaoEncontradoExcecao(id));
     }
 
     public User atualizar(Long id, User userAtualizado) {
@@ -43,7 +40,11 @@ public class UserServico {
     }
 
     public void deletar(Long id) {
-        User user = encontrarPorId(id);
-        userRepositorio.delete(user);
+        try {
+            User user = encontrarPorId(id);
+            userRepositorio.delete(user);
+        } catch (DataIntegrityViolationException ex) {
+            throw new DataBaseException(ex.getMessage());
+        }
     }
 }
