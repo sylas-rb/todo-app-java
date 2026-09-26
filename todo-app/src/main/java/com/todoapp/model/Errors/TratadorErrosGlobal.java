@@ -20,7 +20,7 @@ public class TratadorErrosGlobal {
     @ExceptionHandler(DataBaseException.class)
     public ResponseEntity<ErroPadrao> tratarErroTarefa(DataBaseException te,  HttpServletRequest request) {
         String erro = "Error no database";
-        HttpStatus status = HttpStatus.BAD_REQUEST;
+        HttpStatus status = HttpStatus.CONFLICT;
         ErroPadrao erroPadrao = new ErroPadrao(Instant.now(), status.value(), erro, te.getMessage(),  request.getRequestURI());
         return ResponseEntity.status(status).body(erroPadrao);
     }

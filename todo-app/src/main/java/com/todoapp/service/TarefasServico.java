@@ -2,11 +2,12 @@ package com.todoapp.service;
 
 import com.todoapp.entities.Tarefa;
 import com.todoapp.model.Errors.DataBaseException;
+import com.todoapp.model.Errors.RecursoNaoEncontradoExcecao;
 import com.todoapp.model.Interface.TarefaRepositorio;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TarefasServico{
@@ -27,12 +28,8 @@ public class TarefasServico{
     }
 
     public Tarefa encontrarPorId (Long id) {
-        Optional<Tarefa> tarefa = tarefaRepositorio.findById(id);
-        if (tarefa.isPresent()) {
-            return tarefa.get();
-        } else {
-            throw new DataBaseException("não foi possível encontrar tarefa.");
-        }
+        return tarefaRepositorio.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao(id));
     }
 
     public Tarefa atualizar(Long id, Tarefa tarefaAtualizado) {
@@ -42,7 +39,11 @@ public class TarefasServico{
     }
 
     public void remover (Long id){
-        Tarefa tarefa = encontrarPorId(id);
-        tarefaRepositorio.delete(tarefa);
+        try {
+            Tarefa tarefa = encontrarPorId(id);
+            tarefaRepositorio.delete(tarefa);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataBaseException(e.getMessage());
+        }
     }
 }
