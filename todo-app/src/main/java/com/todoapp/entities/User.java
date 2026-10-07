@@ -18,6 +18,7 @@ public class User implements Serializable {
     private Long id;
     private String nome;
     private String email;
+    private String senha;
 
     @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -25,8 +26,7 @@ public class User implements Serializable {
 
     public User() {}
 
-    public User(Long id, String nome, String email) {
-        this.id = id;
+    public User(String nome, String email) {
         this.nome = nome;
         this.email = email;
     }
@@ -57,6 +57,14 @@ public class User implements Serializable {
 
     public List<Tarefa> getTarefas() {
         return tarefas;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public void setSenha(String senha) {
+        this.senha = senha;
     }
 
     public void atualizar(User user){

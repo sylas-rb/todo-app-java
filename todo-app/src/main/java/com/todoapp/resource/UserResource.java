@@ -1,5 +1,6 @@
 package com.todoapp.resource;
 
+import com.todoapp.DTO.request.UserResquestDTO;
 import com.todoapp.service.UserServico;
 import com.todoapp.entities.User;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +32,25 @@ public class UserResource {
     }
 
     @PostMapping
-    public ResponseEntity<User> salvar(@RequestBody User user) {
+    public ResponseEntity<User> salvar(@RequestBody UserResquestDTO dto) {
+        User user = new User();
+
+        user.setNome(dto.nome());
+        user.setEmail(dto.email());
+        user.setSenha(dto.senha());
+
         user = servico.salvar(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
         return ResponseEntity.created(uri).body(user);
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody User user) {
-        User userAtualizado = servico.atualizar(id, user);
+    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserResquestDTO dto) {
+        User user = servico.encontrarPorId(id);
+        user.setNome(dto.nome());
+        user.setEmail(dto.email());
+        user.setSenha(dto.senha());
+        User userAtualizado = servico.salvar(user);
         return ResponseEntity.ok().body(userAtualizado);
     }
 
