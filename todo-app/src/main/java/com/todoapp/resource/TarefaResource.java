@@ -1,6 +1,7 @@
 package com.todoapp.resource;
 
 import com.todoapp.DTO.request.TarefaResquestDTO;
+import com.todoapp.DTO.response.TarefaResponseDTO;
 import com.todoapp.entities.User;
 import com.todoapp.service.TarefasServico;
 import com.todoapp.entities.Tarefa;
@@ -24,15 +25,33 @@ public class TarefaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<Tarefa>> findAll() {
-        List<Tarefa> lista = servico.encontrarTudo();
-        return ResponseEntity.ok().body(lista);
+    public ResponseEntity<List<TarefaResponseDTO>> findAll() {
+        List<Tarefa> tarefas = servico.encontrarTudo();
+        List<TarefaResponseDTO> dto = tarefas.stream().map(tarefa -> new TarefaResponseDTO(
+                tarefa.getId(),
+                tarefa.getTitulo(),
+                tarefa.getDescricao(),
+                tarefa.getStatus(),
+                tarefa.getPrioridade(),
+                tarefa.getDate(),
+                tarefa.getVencimento()
+        )).toList();
+        return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<Tarefa> findById(@PathVariable Long id) {
+    public ResponseEntity<TarefaResponseDTO> findById(@PathVariable Long id) {
         Tarefa tarefa = servico.encontrarPorId(id);
-        return ResponseEntity.ok().body(tarefa);
+        TarefaResponseDTO dto = new TarefaResponseDTO(
+                tarefa.getId(),
+                tarefa.getTitulo(),
+                tarefa.getDescricao(),
+                tarefa.getStatus(),
+                tarefa.getPrioridade(),
+                tarefa.getDate(),
+                tarefa.getVencimento()
+        );
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping
