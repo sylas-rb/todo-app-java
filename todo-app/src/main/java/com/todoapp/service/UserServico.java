@@ -32,13 +32,6 @@ public class UserServico {
                     .orElseThrow(() -> new RecursoNaoEncontradoExcecao(id));
     }
 
-    public User atualizar(Long id, User userAtualizado) {
-        User user = encontrarPorId(id);
-        user.setNome(userAtualizado.getNome());
-        user.setEmail(userAtualizado.getEmail());
-        return userRepositorio.save(user);
-    }
-
     public void deletar(Long id) {
         try {
             User user = encontrarPorId(id);

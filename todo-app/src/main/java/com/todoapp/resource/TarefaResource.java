@@ -1,7 +1,10 @@
 package com.todoapp.resource;
 
+import com.todoapp.DTO.request.TarefaResquestDTO;
+import com.todoapp.entities.User;
 import com.todoapp.service.TarefasServico;
 import com.todoapp.entities.Tarefa;
+import com.todoapp.service.UserServico;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,9 +16,11 @@ import java.util.List;
 @RequestMapping("/tarefas")
 public class TarefaResource {
     private final TarefasServico servico;
+    private final UserServico userServico;
 
-    public TarefaResource(TarefasServico servico) {
+    public TarefaResource(TarefasServico servico,  UserServico userServico) {
         this.servico = servico;
+        this.userServico = userServico;
     }
 
     @GetMapping
@@ -31,15 +36,36 @@ public class TarefaResource {
     }
 
     @PostMapping
-    public ResponseEntity<Tarefa> salvar(@RequestBody Tarefa tarefa) {
-        tarefa = servico.salvar(tarefa);
+    public ResponseEntity<Tarefa> salvar(@RequestBody TarefaResquestDTO dto) {
+        User user = userServico.encontrarPorId(dto.idUser());
+        Tarefa tarefa = new Tarefa();
+
+        tarefa.setTitulo(dto.titulo());
+        tarefa.setDescricao(dto.descricao());
+        tarefa.setStatus(dto.status());
+        tarefa.setPrioridade(dto.prioridade());
+        tarefa.setDate(dto.date());
+        tarefa.setVencimento();
+        tarefa.setUsuario(user);
+
+        tarefa =  servico.salvar(tarefa);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tarefa.getId()).toUri();
         return ResponseEntity.created(uri).body(tarefa);
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<Tarefa>  update(@PathVariable Long id, @RequestBody Tarefa tarefaAtualizado) {
-        Tarefa tarefa = servico.atualizar(id, tarefaAtualizado);
+    public ResponseEntity<Tarefa>  update(@PathVariable Long id, @RequestBody TarefaResquestDTO dto) {
+        Tarefa tarefa = servico.encontrarPorId(id);
+
+        tarefa.setTitulo(dto.titulo());
+        tarefa.setDescricao(dto.descricao());
+        tarefa.setStatus(dto.status());
+        tarefa.setPrioridade(dto.prioridade());
+        tarefa.setDate(dto.date());
+        tarefa.setVencimento();
+        tarefa.setUsuario(userServico.encontrarPorId(dto.idUser()));
+
+        servico.salvar(tarefa);
         return ResponseEntity.ok().body(tarefa);
     }
 

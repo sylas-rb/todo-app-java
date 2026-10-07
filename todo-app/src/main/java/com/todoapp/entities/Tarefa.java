@@ -36,15 +36,14 @@ public class Tarefa{
 
     public Tarefa() {}
 
-    public Tarefa(Long id, String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, LocalDate vencimento, User usuario) {
-        this.id = id;
+    public Tarefa(String titulo, String descricao, Status status,  Prioridade prioridade, LocalDate date, User usuario) {
         this.titulo = titulo;
         this.descricao = descricao;
         this.status = status;
         this.prioridade = prioridade;
         this.date = date;
-        this.vencimento = vencimento;
         this.usuario = usuario;
+        this.setVencimento();
     }
 
     public Long getId() {
@@ -99,8 +98,8 @@ public class Tarefa{
         return vencimento;
     }
 
-    public void setVencimento(LocalDate vencimento) {
-        this.vencimento = vencimento;
+    public void setVencimento() {
+        this.vencimento =  this.getDate().plusDays(prioridade.getDiasVencimento());
     }
 
     public User getUsuario() {
@@ -108,9 +107,6 @@ public class Tarefa{
     }
 
     public void tarefaStatus(Status status) {
-        if (status == null) {
-            throw new DataBaseException("Status não pode ser nulo");
-        }
         this.status = status;
     }
 
@@ -126,12 +122,5 @@ public class Tarefa{
         this.date = tarefa.getDate();
         this.vencimento = tarefa.getVencimento();
         this.usuario = tarefa.getUsuario();
-    }
-
-    public String formatoExibicao() {
-        if (this.vencimento != null) {
-            return String.format("ID: %d || Titulo: %s (%s - %s)%n" + "Descrição: %s%n" + "Status: %s || Prioridade: %s", getId(), getTitulo(), getDate().format(DTF), getVencimento().format(DTF), getDescricao(), getStatus(), getPrioridade());
-        }
-        return String.format("ID: %d || Titulo: %s (%s - Indeterminado)%n" + "Descrição: %s%n" + "Status: %s || Prioridade: %s", getId(), getTitulo(), getDate().format(DTF), getDescricao(), getStatus(), getPrioridade());
     }
 }

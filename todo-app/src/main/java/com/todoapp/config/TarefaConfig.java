@@ -28,14 +28,14 @@ public class TarefaConfig implements CommandLineRunner {
     public void run(String... args) throws Exception {
         LocalDate date = LocalDate.now();
 
-        User us1 = new User (null, "Maria", "maria@gmail.com");
-        User us2 = new User (null, "Pedro", "pedro@gmail.com");
+        User us1 = new User ("Maria", "maria@gmail.com");
+        User us2 = new User ("Pedro", "pedro@gmail.com");
 
         userRepositorio.saveAll(Arrays.asList(us1, us2));
 
-        Tarefa t1 = new Tarefa(null, "Teste1", "Teste descrição", Status.CONCLUIDA, Prioridade.BAIXA, date, null, us1);
-        Tarefa t2 = new Tarefa(null, "Teste2", "Teste descrição", Status.PENDENTE, Prioridade.MEDIA, date, date.plusDays(Prioridade.MEDIA.getDiasVencimento()), us2);
-        Tarefa t3 = new Tarefa( null, "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.ALTA, date, date.plusDays(Prioridade.ALTA.getDiasVencimento()), us1);
+        Tarefa t1 = new Tarefa("Teste1", "Teste descrição", Status.CONCLUIDA, Prioridade.BAIXA, date, us1);
+        Tarefa t2 = new Tarefa("Teste2", "Teste descrição", Status.PENDENTE, Prioridade.MEDIA, date, us2);
+        Tarefa t3 = new Tarefa( "Teste3", "Teste descrição", Status.PENDENTE, Prioridade.ALTA, date, us1);
 
         tarefaRepositorio.saveAll(Arrays.asList(t1,t2,t3));
 
