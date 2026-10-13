@@ -1,5 +1,7 @@
 package com.todoapp.service;
 
+import com.todoapp.DTO.request.UserResquestDTO;
+import com.todoapp.DTO.response.UserResponseDTO;
 import com.todoapp.entities.User;
 import com.todoapp.model.Errors.DataBaseException;
 import com.todoapp.model.Errors.RecursoNaoEncontradoExcecao;
@@ -17,9 +19,23 @@ public class UserServico {
         this.userRepositorio = userRepositorio;
     }
 
-    public User salvar(User user){
+    public void recebendoDTO (UserResquestDTO dto, User user) {
+        user.setNome(dto.nome());
+        user.setEmail(dto.email());
+        user.setSenha(dto.senha());
+    }
+
+    public UserResponseDTO enviandoDTO (User user) {
+        UserResponseDTO dto = new UserResponseDTO(
+                user.getNome(),
+                user.getEmail()
+        );
+
+        return dto;
+    }
+
+    public void salvar(User user){
         userRepositorio.save(user);
-        return user;
     }
 
     public List<User> encontrarTudo() {

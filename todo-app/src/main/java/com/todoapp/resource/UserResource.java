@@ -1,6 +1,7 @@
 package com.todoapp.resource;
 
 import com.todoapp.DTO.request.UserResquestDTO;
+import com.todoapp.DTO.response.UserResponseDTO;
 import com.todoapp.service.UserServico;
 import com.todoapp.entities.User;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -20,38 +22,47 @@ public class UserResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll() {
-        List<User> lista = servico.encontrarTudo();
-        return ResponseEntity.ok().body(lista);
+    public ResponseEntity<List<UserResponseDTO>> findAll() {
+        List<User> users = servico.encontrarTudo();
+
+        List<UserResponseDTO> dto = new ArrayList<>();
+        for (User user : users) {
+            dto.add(servico.enviandoDTO(user));
+        }
+
+        return ResponseEntity.ok().body(dto);
     }
 
     @GetMapping(value="/{id}")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
+    public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
+
         User user = servico.encontrarPorId(id);
-        return ResponseEntity.ok().body(user);
+        UserResponseDTO dto = servico.enviandoDTO(user);
+
+        return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping
-    public ResponseEntity<User> salvar(@RequestBody UserResquestDTO dto) {
+    public ResponseEntity<UserResponseDTO> salvar(@RequestBody UserResquestDTO dto) {
         User user = new User();
 
-        user.setNome(dto.nome());
-        user.setEmail(dto.email());
-        user.setSenha(dto.senha());
+        servico.recebendoDTO(dto, user);
+        servico.salvar(user);
+        UserResponseDTO retorno = servico.enviandoDTO(user);
 
-        user = servico.salvar(user);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(uri).body(user);
+        return ResponseEntity.created(uri).body(retorno);
     }
 
     @PutMapping(value="/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @RequestBody UserResquestDTO dto) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @RequestBody UserResquestDTO dto) {
+
         User user = servico.encontrarPorId(id);
-        user.setNome(dto.nome());
-        user.setEmail(dto.email());
-        user.setSenha(dto.senha());
-        User userAtualizado = servico.salvar(user);
-        return ResponseEntity.ok().body(userAtualizado);
+        servico.recebendoDTO(dto, user);
+        servico.salvar(user);
+        UserResponseDTO retorno = servico.enviandoDTO(user);
+
+        return ResponseEntity.ok().body(retorno);
     }
 
     @DeleteMapping(value="/{id}")
