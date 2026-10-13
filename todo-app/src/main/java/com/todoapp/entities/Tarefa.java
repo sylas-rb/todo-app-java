@@ -2,17 +2,14 @@ package com.todoapp.entities;
 
 import com.todoapp.model.Enums.Prioridade;
 import com.todoapp.model.Enums.Status;
-import com.todoapp.model.Errors.DataBaseException;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 
 @Entity
 @Table(name = "tb_tarefa")
 public class Tarefa{
-    private static final DateTimeFormatter DTF = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static final Comparator<Tarefa> POR_PRIORIDADE = Comparator.comparing(Tarefa::getPrioridade);
 
@@ -43,15 +40,11 @@ public class Tarefa{
         this.prioridade = prioridade;
         this.date = date;
         this.usuario = usuario;
-        this.setVencimento();
+        this.adicionandoVencimento(date);
     }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getTitulo() {
@@ -94,12 +87,12 @@ public class Tarefa{
         this.date = date;
     }
 
-    public LocalDate getVencimento() {
-        return vencimento;
+    public void setVencimento(LocalDate vencimento) {
+        this.vencimento = vencimento;
     }
 
-    public void setVencimento() {
-        this.vencimento =  this.getDate().plusDays(prioridade.getDiasVencimento());
+    public LocalDate getVencimento() {
+        return vencimento;
     }
 
     public User getUsuario() {
@@ -113,6 +106,11 @@ public class Tarefa{
     public void setUsuario(User usuario) {
         this.usuario = usuario;
     }
+
+    public LocalDate adicionandoVencimento(LocalDate date) {
+        return this.vencimento =  date.plusDays(prioridade.getDiasVencimento());
+    }
+
 
     public void atualizar (Tarefa tarefa) {
         this.titulo = tarefa.getTitulo();
