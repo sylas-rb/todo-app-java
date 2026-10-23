@@ -10,13 +10,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="todo-app" />
-        <module name="build" />
+        <module name="App-Java-Puro" />
         <module name="appJavaPuro" />
+        <module name="build" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="App-Java-Puro" options="-parameters" />
       <module name="appJavaPuro" options="-parameters" />
       <module name="todo-app" options="-parameters" />
     </option>
