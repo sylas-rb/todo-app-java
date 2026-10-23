@@ -2,6 +2,7 @@ package com.todoapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class User implements Serializable {
     private Long id;
     private String nome;
     private String email;
+    @NotNull
     private String senha;
 
     @JsonIgnore

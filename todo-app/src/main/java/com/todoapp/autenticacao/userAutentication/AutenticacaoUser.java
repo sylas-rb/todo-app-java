@@ -1,7 +1,6 @@
 package com.todoapp.autenticacao.userAutentication;
 
 import com.todoapp.entities.User;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -21,7 +20,7 @@ public class AutenticacaoUser implements UserDetails {
     }
 
     @Override
-    public @Nullable String getPassword() {
+    public String getPassword() {
         return user.getSenha();
     }
 

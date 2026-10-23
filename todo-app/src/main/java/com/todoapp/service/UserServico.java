@@ -7,6 +7,7 @@ import com.todoapp.model.Errors.DataBaseException;
 import com.todoapp.model.Errors.RecursoNaoEncontradoExcecao;
 import com.todoapp.model.Interface.UserRepositorio;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,15 +15,17 @@ import java.util.List;
 @Service
 public class UserServico {
     private final UserRepositorio userRepositorio;
+    private final PasswordEncoder encoder;
 
-    public UserServico(UserRepositorio userRepositorio) {
+    public UserServico(UserRepositorio userRepositorio, PasswordEncoder encoder) {
         this.userRepositorio = userRepositorio;
+        this.encoder = encoder;
     }
 
     public void recebendoDTO (UserResquestDTO dto, User user) {
         user.setNome(dto.nome());
         user.setEmail(dto.email());
-        user.setSenha(dto.senha());
+        user.setSenha(encoder.encode(dto.senha()));
     }
 
     public UserResponseDTO enviandoDTO (User user) {
