@@ -6,14 +6,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class AutenticacaoController {
-    private final AutenticacaoService Service;
+    private final AutenticacaoService service;
 
     public AutenticacaoController(AutenticacaoService service) {
-        Service = service;
+        this.service = service;
     }
 
     @PostMapping("/autenticacao")
     public String autenticacao(Authentication autenticacao) {
-        return Service.autenticacao(autenticacao);
+        return service.autenticacao(autenticacao);
     }
 }

@@ -26,6 +26,6 @@ public class AutenticacaoUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getNome();
+        return user.getEmail();
     }
 }

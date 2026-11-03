@@ -33,3 +33,6 @@ Thumbs.db
 # Pasta de teste temporários
 teste/
 validacoes/
+
+#Chaves privadas de autenticação
+/src/main/resources/app.key
