@@ -1,5 +1,7 @@
 package com.todoapp.service;
 
+import com.todoapp.autenticacao.userAutentication.AutenticacaoUser;
+import com.todoapp.model.Errors.DataBaseException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -22,6 +24,13 @@ public class JwtServico {
         Instant now = Instant.now();
         long expiry = 3600L;
 
+        String user;
+        if (autenticacao.getPrincipal() instanceof AutenticacaoUser usuario) {
+            user = String.valueOf(usuario.getId());
+        } else {
+            throw new DataBaseException("Não foi possível localizar o usuário.");
+        }
+
         String scopes = autenticacao.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(" "));
@@ -29,7 +38,7 @@ public class JwtServico {
                 .issuer("gerenciador-tarefas")
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiry))
-                .subject(autenticacao.getName())
+                .subject(user)
                 .claim("scope", scopes)
                 .build();
 

@@ -20,7 +20,5 @@ public record TarefaResquestDTO (
         @NotNull(message = "Campo prioridade obrigatório")
         Prioridade prioridade,
         @NotNull(message = "Campo data obrigatório.")
-        LocalDate date,
-        @NotNull(message = "Usuário não identificado.")
-        Long idUser
+        LocalDate date
 ) {}

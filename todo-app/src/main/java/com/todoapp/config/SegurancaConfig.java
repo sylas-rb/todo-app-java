@@ -34,7 +34,7 @@ public class SegurancaConfig {
         http.csrf(csrf -> csrf.disable())
                 . authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST, "/user").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/autenticacao").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/autenticacao").authenticated()
                                 .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
                 .oauth2ResourceServer(conf -> conf.jwt(Customizer.withDefaults()));

@@ -2,11 +2,11 @@ package com.todoapp.resource;
 
 import com.todoapp.DTO.request.TarefaResquestDTO;
 import com.todoapp.DTO.response.TarefaResponseDTO;
-import com.todoapp.entities.User;
 import com.todoapp.service.TarefasServico;
 import com.todoapp.entities.Tarefa;
 import com.todoapp.service.UserServico;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -26,9 +26,9 @@ public class TarefaResource {
     }
 
     @GetMapping
-    public ResponseEntity<List<TarefaResponseDTO>> findAll() {
+    public ResponseEntity<List<TarefaResponseDTO>> findAll(Authentication authentication) {
 
-        List<Tarefa> tarefas = servico.encontrarTudo();
+        List<Tarefa> tarefas = servico.encontrarTudo(Long.parseLong(authentication.getName()));
         List<TarefaResponseDTO> dto = new ArrayList<>();
         for (Tarefa tarefa : tarefas) {
             dto.add(servico.enviandoDTO(tarefa));
@@ -37,20 +37,18 @@ public class TarefaResource {
         return ResponseEntity.ok().body(dto);
     }
 
-    @GetMapping(value="/{id}")
-    public ResponseEntity<TarefaResponseDTO> findById(@PathVariable Long id) {
+    @GetMapping(value="/{idTarefa}")
+    public ResponseEntity<TarefaResponseDTO> findById(@PathVariable Long idTarefa, @PathVariable Long idUser) {
 
-        Tarefa tarefa = servico.encontrarPorId(id);
+        Tarefa tarefa = servico.encontrarPorId(idTarefa, idUser);
         TarefaResponseDTO dto = servico.enviandoDTO(tarefa);
 
         return ResponseEntity.ok().body(dto);
     }
 
-    @PostMapping
-    public ResponseEntity<TarefaResponseDTO> salvar(@RequestBody TarefaResquestDTO dto) {
-        User user = userServico.encontrarPorId(dto.idUser());
-
-        Tarefa tarefa = servico.recebendoDTO(null, dto, user);
+    @PostMapping()
+    public ResponseEntity<TarefaResponseDTO> salvar(@RequestBody TarefaResquestDTO dto, @PathVariable Long idUser) {
+        Tarefa tarefa = servico.recebendoDTO(null, dto, idUser);
         servico.salvar(tarefa);
         TarefaResponseDTO retorno = servico.enviandoDTO(tarefa);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tarefa.getId()).toUri();
@@ -58,20 +56,18 @@ public class TarefaResource {
         return ResponseEntity.created(uri).body(retorno);
     }
 
-    @PutMapping(value="/{id}")
-    public ResponseEntity<TarefaResponseDTO>  update(@PathVariable Long id, @RequestBody TarefaResquestDTO dto) {
-        User user = userServico.encontrarPorId(dto.idUser());
-
-        Tarefa tarefa = servico.recebendoDTO(id, dto, user);
+    @PutMapping(value="/{idTarefa}")
+    public ResponseEntity<TarefaResponseDTO>  update(@PathVariable Long idTarefa, @RequestBody TarefaResquestDTO dto, @PathVariable Long idUser) {
+        Tarefa tarefa = servico.recebendoDTO(idTarefa, dto,idUser);
         servico.salvar(tarefa);
         TarefaResponseDTO retorno = servico.enviandoDTO(tarefa);
 
         return ResponseEntity.ok().body(retorno);
     }
 
-    @DeleteMapping(value="/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        servico.remover(id);
+    @DeleteMapping(value="/{idTarefa}")
+    public ResponseEntity<Void> deleteById(@PathVariable Long idTarefa, @PathVariable Long idUser) {
+        servico.remover(idTarefa, idUser);
         return ResponseEntity.noContent().build();
     }
 }

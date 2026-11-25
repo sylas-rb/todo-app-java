@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface AutenticacaoRepositorio extends CrudRepository<User, String> {
 
-    Optional<User> findByEmail(String Email);
+    Optional<User> findByEmail(String email);
 }
