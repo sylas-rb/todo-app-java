@@ -38,17 +38,17 @@ public class TarefaResource {
     }
 
     @GetMapping(value="/{idTarefa}")
-    public ResponseEntity<TarefaResponseDTO> findById(@PathVariable Long idTarefa, @PathVariable Long idUser) {
+    public ResponseEntity<TarefaResponseDTO> findById(@PathVariable Long idTarefa, Authentication authentication) {
 
-        Tarefa tarefa = servico.encontrarPorId(idTarefa, idUser);
+        Tarefa tarefa = servico.encontrarPorId(idTarefa, Long.parseLong(authentication.getName()));
         TarefaResponseDTO dto = servico.enviandoDTO(tarefa);
 
         return ResponseEntity.ok().body(dto);
     }
 
     @PostMapping()
-    public ResponseEntity<TarefaResponseDTO> salvar(@RequestBody TarefaResquestDTO dto, @PathVariable Long idUser) {
-        Tarefa tarefa = servico.recebendoDTO(null, dto, idUser);
+    public ResponseEntity<TarefaResponseDTO> salvar(@RequestBody TarefaResquestDTO dto, Authentication authentication) {
+        Tarefa tarefa = servico.recebendoDTO(null, dto, Long.parseLong(authentication.getName()));
         servico.salvar(tarefa);
         TarefaResponseDTO retorno = servico.enviandoDTO(tarefa);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(tarefa.getId()).toUri();
@@ -57,8 +57,8 @@ public class TarefaResource {
     }
 
     @PutMapping(value="/{idTarefa}")
-    public ResponseEntity<TarefaResponseDTO>  update(@PathVariable Long idTarefa, @RequestBody TarefaResquestDTO dto, @PathVariable Long idUser) {
-        Tarefa tarefa = servico.recebendoDTO(idTarefa, dto,idUser);
+    public ResponseEntity<TarefaResponseDTO>  update(@PathVariable Long idTarefa, @RequestBody TarefaResquestDTO dto, Authentication authentication) {
+        Tarefa tarefa = servico.recebendoDTO(idTarefa, dto, Long.parseLong(authentication.getName()));
         servico.salvar(tarefa);
         TarefaResponseDTO retorno = servico.enviandoDTO(tarefa);
 
@@ -66,8 +66,8 @@ public class TarefaResource {
     }
 
     @DeleteMapping(value="/{idTarefa}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long idTarefa, @PathVariable Long idUser) {
-        servico.remover(idTarefa, idUser);
+    public ResponseEntity<Void> deleteById(@PathVariable Long idTarefa, Authentication authentication) {
+        servico.remover(idTarefa, Long.parseLong(authentication.getName()));
         return ResponseEntity.noContent().build();
     }
 }

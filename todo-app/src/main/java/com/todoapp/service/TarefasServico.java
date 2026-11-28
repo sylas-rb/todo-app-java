@@ -24,7 +24,8 @@ public class TarefasServico{
     }
 
     public Tarefa recebendoDTO (Long idTarefa, TarefaResquestDTO dto, Long idUser) {
-        Tarefa tarefa = (idTarefa != null) ? encontrarPorId(idTarefa, idUser) : new Tarefa();
+        Tarefa tarefa = (idTarefa != null) ? tarefaRepositorio.findByIdAndUsuarioId(idTarefa, idUser)
+                .orElseThrow(() -> new RecursoNaoEncontradoExcecao(idTarefa)) : new Tarefa();
         User user = userRepositorio.findById(idUser).orElseThrow(() -> new RecursoNaoEncontradoExcecao(idUser));
 
         tarefa.setTitulo(dto.titulo());
@@ -67,7 +68,8 @@ public class TarefasServico{
 
     public void remover (Long idTarefa, Long idUser){
         try {
-            Tarefa tarefa = encontrarPorId(idTarefa, idUser);
+            Tarefa tarefa = tarefaRepositorio.findByIdAndUsuarioId(idTarefa, idUser)
+                    .orElseThrow(() -> new RecursoNaoEncontradoExcecao(idTarefa));
             tarefaRepositorio.delete(tarefa);
         } catch (DataIntegrityViolationException e) {
             throw new DataBaseException(e.getMessage());
